@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Student Record Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --success: #10b981;
+      --success-hover: #059669;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --danger-hover: #dc2626;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --border-focus: #818cf8;
+      --radius: 14px;
+      --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 20px 30px -10px rgba(79, 70, 229, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 12px 32px;
+    }
+
+    .container {
+      max-width: 680px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-top: 8px;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 4px 14px;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: inline-block;
+    }
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #1e1b4b;
+      letter-spacing: -0.5px;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Main Card */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 20px 20px 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    /* Form Fields Grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 540px) {
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .col-span-2 {
+        grid-column: span 2;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .label-req {
+      color: var(--danger);
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input {
+      width: 100%;
+      height: 44px;
+      padding: 0 14px;
+      background: #fdfdfd;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .input:focus {
+      border-color: var(--border-focus);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+    }
+
+    .input::placeholder {
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+
+    /* Action Buttons */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    @media (min-width: 540px) {
+      .actions-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    .btn {
+      height: 42px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    .btn-add {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+    .btn-add:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-update {
+      background: var(--warning);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+    }
+    .btn-update:hover:not(:disabled) {
+      background: #d97706;
+    }
+
+    .btn-delete {
+      background: var(--danger);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+    }
+    .btn-delete:hover:not(:disabled) {
+      background: var(--danger-hover);
+    }
+
+    .btn-next {
+      background: #0ea5e9;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+    }
+    .btn-next:hover:not(:disabled) {
+      background: #0284c7;
+    }
+
+    .btn-clear {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid var(--border);
+    }
+    .btn-clear:hover:not(:disabled) {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    .btn:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* Status Bar */
+    .status-bar {
+      margin-top: 18px;
+      padding: 10px 14px;
+      background: #f8fafc;
+      border-radius: 10px;
+      border: 1px dashed #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 0.82rem;
+    }
+
+    .status-badge {
+      font-weight: 700;
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-count {
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    /* File Storage & Quick Share Toolbar */
+    .toolbar-card {
+      background: #ffffff;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toolbar-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .toolbar-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .toolbar-subtitle {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .toolbar-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-tool {
+      height: 34px;
+      padding: 0 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-tool:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      color: var(--primary);
+    }
+
+    /* Records Table Section */
+    .table-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .table-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .table-search {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      width: 160px;
+      outline: none;
+    }
+    .table-search:focus {
+      border-color: var(--border-focus);
+    }
+
+    .table-container {
+      overflow-x: auto;
+      max-height: 280px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.82rem;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #475569;
+      padding: 10px 12px;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      border-bottom: 1.5px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+      white-space: nowrap;
+    }
+
+    tr:hover td {
+      background: #faf5ff;
+    }
+
+    .gpa-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .empty-state {
+      padding: 32px 16px;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      left: 20px;
+      display: flex;
+      justify-content: center;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    @media (min-width: 540px) {
+      .toast-container {
+        left: auto;
+        right: 24px;
+      }
+    }
+
+    .toast {
+      background: #1e293b;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: auto;
+      max-width: 90vw;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast-icon {
+      font-size: 1.1rem;
+    }
+
+    /* Modal Dialog */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #ffffff;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 380px;
+      padding: 22px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .modal-text {
+      font-size: 0.86rem;
+      color: #64748b;
+      margin-bottom: 20px;
+      line-height: 1.45;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      height: 40px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      border: none;
+      cursor: pointer;
+    }
+
+    .modal-btn-cancel {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .modal-btn-confirm {
+      background: var(--danger);
+      color: #ffffff;
+    }
+
+    /* Hidden File Input */
+    #fileInput {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="badge-pill">
+        <span class="badge-dot"></span>
+        C++ Specification Compliant
+      </div>
+      <h1 class="title">Student Record Management System</h1>
+      <p class="subtitle">Cross-Platform Web Edition &bull; Mobile & Desktop Ready</p>
+    </header>
+
+    <!-- Main Card -->
+    <main class="card">
+      <form id="studentForm" onsubmit="return false;" class="form-grid">
+        
+        <!-- 1. Student Name -->
+        <div class="form-group col-span-2">
+          <label class="label" for="inpName">
+            Student Name <span class="label-req">*</span>
+          </label>
+          <div class="input-wrapper">
+            <input type="text" id="inpName" class="input" placeholder="e.g. Muhammad Ali" autocomplete="off">
+          </div>
+        </div>
+
+        <!-- 2. Roll Number -->
+        <div class="form-group">
+          <label class="label" for="inpRollNo">
+            Roll Number (Unique ID) <span class="label-req">*</span>
+          </label>
+          <div class="input-wrapper">
+            <input type="text" id="inpRollNo" class="input" placeholder="e.g. CS-2023-01" autocomplete="off">
+          </div>
+        </div>
+
+        <!-- 3. Father's Name -->
+        <div class="form-group">
+          <label class="label" for="inpFather">
+            Father's Name <span class="label-req">*</span>
+          </label>
+          <div class="input-wrapper">
+            <input type="text" id="inpFather" class="input" placeholder="e.g. Ahmed Ali" autocomplete="off">
+          </div>
+        </div>
+
+        <!-- 4. Caste -->
+        <div class="form-group">
+          <label class="label" for="inpCaste">
+            Caste <span class="label-req">*</span>
+          </label>
+          <div class="input-wrapper">
+            <input type="text" id="inpCaste" class="input" placeholder="e.g. Ansari" autocomplete="off">
+          </div>
+        </div>
+
+        <!-- 5. District -->
+        <div class="form-group">
+          <label class="label" for="inpDistrict">
+            District <span class="label-req">*</span>
+          </label>
+          <div class="input-wrapper">
+            <input type="text" id="inpDistrict" class="input" placeholder="e.g. Karachi" autocomplete="off">
+          </div>
+        </div>
+
+        <!-- 6. GPA -->
+        <div class="form-group col-span-2">
+          <label class="label" for="inpGpa">
+            GPA (0.00 - 4.00) <span class="label-req">*</span>
+          </label>
+          <div class="input-wrapper">
+            <input type="number" id="inpGpa" class="input" step="0.01" min="0" max="4" placeholder="e.g. 3.75" autocomplete="off">
+          </div>
+        </div>
+      </form>
+
+      <!-- Action Buttons -->
+      <div class="actions-grid">
+        <button id="btnAdd" class="btn btn-add" title="Save new student record">
+          ➕ Add
+        </button>
+        <button id="btnUpdate" class="btn btn-update" title="Update currently displayed record">
+          ✏️ Update
+        </button>
+        <button id="btnDelete" class="btn btn-delete" title="Delete currently displayed record">
+          🗑️ Delete
+        </button>
+        <button id="btnNext" class="btn btn-next" title="Cycle through student records">
+          ⏭️ Next
+        </button>
+        <button id="btnClear" class="btn btn-clear" title="Reset form and return to Add mode">
+          🔄 Clear / New
+        </button>
+      </div>
+
+      <!-- Status Indicator -->
+      <div class="status-bar">
+        <div id="statusBadge" class="status-badge">
+          <span>●</span> <span id="statusText">Ready. Mode: Add New Record</span>
+        </div>
+        <div id="statusCount" class="status-count">Total Records: 0</div>
+      </div>
+    </main>
+
+    <!-- Toolbar: students.txt File Handling & Share -->
+    <div class="toolbar-card">
+      <div class="toolbar-left">
+        <div class="toolbar-icon">📁</div>
+        <div>
+          <div class="toolbar-title">students.txt File Handling</div>
+          <div class="toolbar-subtitle">Syncs with C++ CSV standard</div>
+        </div>
+      </div>
+      <div class="toolbar-buttons">
+        <button id="btnExport" class="btn-tool" title="Download records as students.txt">
+          📥 Export students.txt
+        </button>
+        <button id="btnImport" class="btn-tool" title="Upload an existing students.txt file">
+          📤 Import students.txt
+        </button>
+        <input type="file" id="fileInput" accept=".txt,.csv">
+      </div>
+    </div>
+
+    <!-- Live Records Table -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">
+          📋 All Student Records
+        </div>
+        <input type="text" id="searchBox" class="table-search" placeholder="🔍 Search records...">
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Roll No</th>
+              <th>Name</th>
+              <th>Father's Name</th>
+              <th>Caste</th>
+              <th>District</th>
+              <th>GPA</th>
+            </tr>
+          </thead>
+          <tbody id="recordsTbody">
+            <!-- Populated via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container">
+    <div id="toast" class="toast">
+      <span id="toastIcon" class="toast-icon">ℹ️</span>
+      <span id="toastMessage">Notification message</span>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">Confirm Deletion</div>
+      <div id="deleteModalText" class="modal-text">
+        Are you sure you want to permanently delete this student record?
+      </div>
+      <div class="modal-actions">
+        <button id="btnModalCancel" class="modal-btn modal-btn-cancel">Cancel</button>
+        <button id="btnModalConfirm" class="modal-btn modal-btn-confirm">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initial Seed Data (Identical to C++ students.txt)
+    const DEFAULT_STUDENTS = [
+      { name: "Muhammad Ali", rollNo: "CS-2023-01", fatherName: "Ahmed Ali", caste: "Ansari", district: "Karachi", gpa: 3.75 },
+      { name: "Fatima Khan", rollNo: "SE-2023-14", fatherName: "Tariq Khan", caste: "Pathan", district: "Lahore", gpa: 3.88 },
+      { name: "Usman Tariq", rollNo: "IT-2023-22", fatherName: "Tariq Mehmood", caste: "Arain", district: "Islamabad", gpa: 3.42 },
+      { name: "Ayesha Malik", rollNo: "CS-2023-45", fatherName: "Abdul Malik", caste: "Malik", district: "Rawalpindi", gpa: 3.95 }
+    ];
+
+    // State Variables
+    let students = [];
+    let currentIndex = -1; // -1 means no record is loaded (Startup / Add Mode)
+    let currentLoadedRollNo = "";
+
+    // DOM Elements
+    const inpName = document.getElementById("inpName");
+    const inpRollNo = document.getElementById("inpRollNo");
+    const inpFather = document.getElementById("inpFather");
+    const inpCaste = document.getElementById("inpCaste");
+    const inpDistrict = document.getElementById("inpDistrict");
+    const inpGpa = document.getElementById("inpGpa");
+
+    const btnAdd = document.getElementById("btnAdd");
+    const btnUpdate = document.getElementById("btnUpdate");
+    const btnDelete = document.getElementById("btnDelete");
+    const btnNext = document.getElementById("btnNext");
+    const btnClear = document.getElementById("btnClear");
+
+    const statusText = document.getElementById("statusText");
+    const statusCount = document.getElementById("statusCount");
+    const recordsTbody = document.getElementById("recordsTbody");
+    const searchBox = document.getElementById("searchBox");
+
+    const btnExport = document.getElementById("btnExport");
+    const btnImport = document.getElementById("btnImport");
+    const fileInput = document.getElementById("fileInput");
+
+    const toast = document.getElementById("toast");
+    const toastMessage = document.getElementById("toastMessage");
+    const toastIcon = document.getElementById("toastIcon");
+
+    const deleteModal = document.getElementById("deleteModal");
+    const deleteModalText = document.getElementById("deleteModalText");
+    const btnModalCancel = document.getElementById("btnModalCancel");
+    const btnModalConfirm = document.getElementById("btnModalConfirm");
+
+    // Initialize application
+    function init() {
+      loadStorage();
+      setInitialState();
+      renderTable();
+      setupEventListeners();
+    }
+
+    // Storage Management (LocalStorage with fallback to seed data)
+    function loadStorage() {
+      const stored = localStorage.getItem("students_db");
+      if (stored) {
+        try {
+          students = JSON.parse(stored);
+        } catch (e) {
+          students = [...DEFAULT_STUDENTS];
+        }
+      } else {
+        students = [...DEFAULT_STUDENTS];
+        saveStorage();
+      }
+    }
+
+    function saveStorage() {
+      localStorage.setItem("students_db", JSON.stringify(students));
+      updateCountDisplay();
+    }
+
+    /*
+     * STRICT REQUIREMENT 3: State Management
+     * On Application Startup:
+     * - 'Update' and 'Delete' buttons must be DISABLED.
+     * - 'Add' button must be ENABLED.
+     */
+    function setInitialState() {
+      btnAdd.disabled = false;
+      btnUpdate.disabled = true;
+      btnDelete.disabled = true;
+      currentIndex = -1;
+      currentLoadedRollNo = "";
+      updateStatus("Ready. Mode: Add New Record");
+      updateCountDisplay();
+    }
+
+    function clearForm() {
+      inpName.value = "";
+      inpRollNo.value = "";
+      inpFather.value = "";
+      inpCaste.value = "";
+      inpDistrict.value = "";
+      inpGpa.value = "";
+    }
+
+    function updateStatus(msg) {
+      statusText.textContent = msg;
+    }
+
+    function updateCountDisplay() {
+      statusCount.textContent = `Total Records: ${students.length}`;
+    }
+
+    // Toast Notification helper
+    let toastTimeout;
+    function showToast(msg, type = "info") {
+      clearTimeout(toastTimeout);
+      toastMessage.textContent = msg;
+      if (type === "success") toastIcon.textContent = "✅";
+      else if (type === "error") toastIcon.textContent = "⚠️";
+      else toastIcon.textContent = "ℹ️";
+
+      toast.classList.add("show");
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+
+    // Validation
+    function validateForm(name, rollNo, fatherName, caste, district, gpaStr, isNewRecord = true) {
+      if (!name || !rollNo || !fatherName || !caste || !district || !gpaStr) {
+        showToast("Please fill in all fields.", "error");
+        return false;
+      }
+
+      if (name.includes(",") || rollNo.includes(",") || fatherName.includes(",") || caste.includes(",") || district.includes(",")) {
+        showToast("Fields cannot contain comma (',') delimiter.", "error");
+        return false;
+      }
+
+      const gpa = parseFloat(gpaStr);
+      if (isNaN(gpa) || gpa < 0 || gpa > 4.0) {
+        showToast("GPA must be a valid number between 0.00 and 4.00.", "error");
+        return false;
+      }
+
+      if (isNewRecord) {
+        const duplicate = students.some(s => s.rollNo.toLowerCase() === rollNo.toLowerCase());
+        if (duplicate) {
+          showToast(`Student with Roll Number '${rollNo}' already exists!`, "error");
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    /*
+     * Action 1: ADD RECORD
+     * Saves entered student details into storage and shows confirmation.
+     */
+    function onAdd() {
+      const name = inpName.value.trim();
+      const rollNo = inpRollNo.value.trim();
+      const fatherName = inpFather.value.trim();
+      const caste = inpCaste.value.trim();
+      const district = inpDistrict.value.trim();
+      const gpaStr = inpGpa.value.trim();
+
+      if (!validateForm(name, rollNo, fatherName, caste, district, gpaStr, true)) {
+        return;
+      }
+
+      const newStudent = {
+        name,
+        rollNo,
+        fatherName,
+        caste,
+        district,
+        gpa: parseFloat(parseFloat(gpaStr).toFixed(2))
+      };
+
+      students.push(newStudent);
+      saveStorage();
+      renderTable();
+      clearForm();
+      setInitialState();
+      showToast(`Student '${name}' (Roll No: ${rollNo}) added successfully!`, "success");
+    }
+
+    /*
+     * STRICT REQUIREMENT 3: Next Button Click
+     * - 'Add' button must become DISABLED.
+     * - 'Update' and 'Delete' buttons must become ENABLED.
+     */
+    function onNext() {
+      if (students.length === 0) {
+        showToast("No student records found. Add records first.", "error");
+        return;
+      }
+
+      currentIndex++;
+      let cycled = false;
+      if (currentIndex >= students.length) {
+        currentIndex = 0;
+        cycled = true;
+      }
+
+      const s = students[currentIndex];
+      inpName.value = s.name;
+      inpRollNo.value = s.rollNo;
+      inpFather.value = s.fatherName;
+      inpCaste.value = s.caste;
+      inpDistrict.value = s.district;
+      inpGpa.value = Number(s.gpa).toFixed(2);
+
+      currentLoadedRollNo = s.rollNo;
+
+      // State transitions
+      btnAdd.disabled = true;
+      btnUpdate.disabled = false;
+      btnDelete.disabled = false;
+
+      let msg = `Viewing Record ${currentIndex + 1} of ${students.length}`;
+      if (cycled) msg += " (Cycled to first record)";
+      updateStatus(msg);
+      highlightTableRow(s.rollNo);
+    }
+
+    /*
+     * Action 2: UPDATE RECORD
+     * Modifies currently displayed record using Roll Number as unique identifier.
+     */
+    function onUpdate() {
+      if (!currentLoadedRollNo) {
+        showToast("No record is loaded. Click 'Next' first.", "error");
+        return;
+      }
+
+      const name = inpName.value.trim();
+      const rollNo = inpRollNo.value.trim();
+      const fatherName = inpFather.value.trim();
+      const caste = inpCaste.value.trim();
+      const district = inpDistrict.value.trim();
+      const gpaStr = inpGpa.value.trim();
+
+      if (!validateForm(name, rollNo, fatherName, caste, district, gpaStr, false)) {
+        return;
+      }
+
+      // Check if Roll No was modified and collides with another student
+      if (rollNo.toLowerCase() !== currentLoadedRollNo.toLowerCase()) {
+        const collision = students.some(s => s.rollNo.toLowerCase() === rollNo.toLowerCase());
+        if (collision) {
+          showToast(`Cannot change Roll Number: '${rollNo}' is already taken!`, "error");
+          return;
+        }
+      }
+
+      const idx = students.findIndex(s => s.rollNo.toLowerCase() === currentLoadedRollNo.toLowerCase());
+      if (idx === -1) {
+        showToast("Original record could not be found.", "error");
+        return;
+      }
+
+      students[idx] = {
+        name,
+        rollNo,
+        fatherName,
+        caste,
+        district,
+        gpa: parseFloat(parseFloat(gpaStr).toFixed(2))
+      };
+
+      currentLoadedRollNo = rollNo;
+      saveStorage();
+      renderTable();
+      updateStatus(`Updated Roll No: ${rollNo}`);
+      showToast(`Student '${rollNo}' updated successfully!`, "success");
+      highlightTableRow(rollNo);
+    }
+
+    /*
+     * Action 3: DELETE RECORD
+     * Removes currently displayed student record from storage.
+     */
+    function onDelete() {
+      if (!currentLoadedRollNo) {
+        showToast("No record loaded. Click 'Next' first.", "error");
+        return;
+      }
+
+      deleteModalText.textContent = `Are you sure you want to permanently delete the student record for Roll Number '${currentLoadedRollNo}'?`;
+      deleteModal.classList.add("active");
+    }
+
+    function confirmDelete() {
+      deleteModal.classList.remove("active");
+      const idx = students.findIndex(s => s.rollNo.toLowerCase() === currentLoadedRollNo.toLowerCase());
+      if (idx !== -1) {
+        const removed = students.splice(idx, 1)[0];
+        saveStorage();
+        renderTable();
+        clearForm();
+        setInitialState();
+        showToast(`Record '${removed.rollNo}' deleted successfully.`, "info");
+      }
+    }
+
+    /*
+     * Action 5: CLEAR / NEW
+     * Resets fields and brings back to Add Mode.
+     */
+    function onClear() {
+      clearForm();
+      setInitialState();
+      removeTableHighlight();
+      showToast("Form cleared. Switched to Add Mode.", "info");
+    }
+
+    // Render Table
+    function renderTable(filterQuery = "") {
+      recordsTbody.innerHTML = "";
+      const query = filterQuery.toLowerCase();
+
+      const filtered = students.filter(s => 
+        s.name.toLowerCase().includes(query) ||
+        s.rollNo.toLowerCase().includes(query) ||
+        s.fatherName.toLowerCase().includes(query) ||
+        s.caste.toLowerCase().includes(query) ||
+        s.district.toLowerCase().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        recordsTbody.innerHTML = `<tr><td colspan="7" class="empty-state">No student records found.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach((s, idx) => {
+        const tr = document.createElement("tr");
+        tr.dataset.rollno = s.rollNo;
+        tr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td><strong>${s.rollNo}</strong></td>
+          <td>${s.name}</td>
+          <td>${s.fatherName}</td>
+          <td>${s.caste}</td>
+          <td>${s.district}</td>
+          <td><span class="gpa-badge">${Number(s.gpa).toFixed(2)}</span></td>
+        `;
+        tr.style.cursor = "pointer";
+        tr.title = "Click to load this student";
+        tr.addEventListener("click", () => {
+          loadSpecificStudent(s.rollNo);
+        });
+        recordsTbody.appendChild(tr);
+      });
+    }
+
+    function highlightTableRow(rollNo) {
+      document.querySelectorAll("#recordsTbody tr").forEach(tr => {
+        if (tr.dataset.rollno && tr.dataset.rollno.toLowerCase() === rollNo.toLowerCase()) {
+          tr.style.background = "#eef2ff";
+          tr.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          tr.style.background = "";
+        }
+      });
+    }
+
+    function removeTableHighlight() {
+      document.querySelectorAll("#recordsTbody tr").forEach(tr => tr.style.background = "");
+    }
+
+    function loadSpecificStudent(rollNo) {
+      const idx = students.findIndex(s => s.rollNo.toLowerCase() === rollNo.toLowerCase());
+      if (idx !== -1) {
+        currentIndex = idx;
+        const s = students[idx];
+        inpName.value = s.name;
+        inpRollNo.value = s.rollNo;
+        inpFather.value = s.fatherName;
+        inpCaste.value = s.caste;
+        inpDistrict.value = s.district;
+        inpGpa.value = Number(s.gpa).toFixed(2);
+
+        currentLoadedRollNo = s.rollNo;
+
+        btnAdd.disabled = true;
+        btnUpdate.disabled = false;
+        btnDelete.disabled = false;
+
+        updateStatus(`Viewing Record ${idx + 1} of ${students.length}`);
+        highlightTableRow(s.rollNo);
+      }
+    }
+
+    // Export to students.txt (CSV Format)
+    function exportToTxt() {
+      if (students.length === 0) {
+        showToast("No records to export.", "error");
+        return;
+      }
+
+      let content = "";
+      students.forEach(s => {
+        content += `${s.name},${s.rollNo},${s.fatherName},${s.caste},${s.district},${Number(s.gpa).toFixed(2)}\n`;
+      });
+
+      const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "students.txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("Downloaded students.txt file!", "success");
+    }
+
+    // Import from students.txt
+    function importFromTxt(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const text = event.target.result;
+        const lines = text.split(/\r?\n/);
+        let importedCount = 0;
+        let newStudents = [];
+
+        lines.forEach(line => {
+          line = line.trim();
+          if (!line) return;
+          const parts = line.split(",").map(p => p.trim());
+          if (parts.length === 6) {
+            const gpaVal = parseFloat(parts[5]);
+            if (!isNaN(gpaVal)) {
+              newStudents.push({
+                name: parts[0],
+                rollNo: parts[1],
+                fatherName: parts[2],
+                caste: parts[3],
+                district: parts[4],
+                gpa: parseFloat(gpaVal.toFixed(2))
+              });
+              importedCount++;
+            }
+          }
+        });
+
+        if (importedCount > 0) {
+          students = newStudents;
+          saveStorage();
+          renderTable();
+          setInitialState();
+          clearForm();
+          showToast(`Successfully imported ${importedCount} records from ${file.name}!`, "success");
+        } else {
+          showToast("Failed to parse valid CSV records from file.", "error");
+        }
+        fileInput.value = "";
+      };
+      reader.readAsText(file);
+    }
+
+    // Event Listeners
+    function setupEventListeners() {
+      btnAdd.addEventListener("click", onAdd);
+      btnNext.addEventListener("click", onNext);
+      btnUpdate.addEventListener("click", onUpdate);
+      btnDelete.addEventListener("click", onDelete);
+      btnClear.addEventListener("click", onClear);
+
+      btnExport.addEventListener("click", exportToTxt);
+      btnImport.addEventListener("click", () => fileInput.click());
+      fileInput.addEventListener("change", importFromTxt);
+
+      searchBox.addEventListener("input", (e) => {
+        renderTable(e.target.value);
+      });
+
+      btnModalCancel.addEventListener("click", () => {
+        deleteModal.classList.remove("active");
+      });
+
+      btnModalConfirm.addEventListener("click", confirmDelete);
+
+      deleteModal.addEventListener("click", (e) => {
+        if (e.target === deleteModal) deleteModal.classList.remove("active");
+      });
+    }
+
+    // Run on startup
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>

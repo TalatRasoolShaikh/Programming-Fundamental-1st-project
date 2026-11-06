@@ -1,0 +1,5 @@
+Muhammad Ali,CS-2023-01,Ahmed Ali,Ansari,Karachi,3.75
+Fatima Khan,SE-2023-14,Tariq Khan,Pathan,Lahore,3.88
+Usman Tariq,IT-2023-22,Tariq Mehmood,Arain,Islamabad,3.42
+Talat Rasool Shaikh,K26SW-019,Saqib-UR-Rasool Shaikh,Shaikh,Sukkur,3.90
+Asadullah,K26SW-018,Nasir Shaifque,Shaikh,Sukkur,4.00
